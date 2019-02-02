@@ -6,7 +6,6 @@ import os.path
 
 from testRunner import run_tests, silent_tests
 
-# for illuminati, except I can't figure out how to use custom emoji
 from random import randint
 # from discord import Emoji
 
@@ -28,31 +27,6 @@ eventlist = []
 
 """
 TODO:
-    FIX THIS:
-        event scheduling - pathfinder
-        make meeting
-        -loc
-        -time
-        -date
-        rsvp to meeting
-        check attendees
-    add pickling?
-    DB?
-        mongoDB:
-            it's cool
-            good for REST
-            med setup
-        SQLLite3:
-            no server
-            sql, lame
-            easy setup
-        text file:
-            lite
-            no server
-            bad practice
-            hard "setup" - read and parse the fucker
-    maybe a direct db hook? REST API?
-
     add a execute batch file function
     input: !batch [filename]
     output: executes batch file on my computer
@@ -61,16 +35,6 @@ TODO:
     -can start mongod
     -can shutdown mongod
     -access mongod, etc, etc
-"""
-
-"""Figure this out
-    # @client.command(name='test',
-    #                 description="tests the client.command decorator.",
-    #                 brief="an attempt at getting good.",
-    #                 aliases=['tester', 'trial', 'experiment'],
-    #                 pass_context=True)
-    # async def test(context):
-    #     await client.say("command successful")
 """
 
 
@@ -153,7 +117,11 @@ class MyClient(discord.Client):
 
         if message.content.startswith('!wiki'):
             # get all text after !wiki
-            query = message.content.split(' ', 1)[1]
+            try:
+                query = message.content.split(' ', 1)[1]
+            except IndexError:
+                await self.send_message(message.channel, "Enter a search query after the '!wiki' command.")
+                raise
             res = apps.wiki_search(query)
             # cap message at 2000 characters to fit in discord char limit
             # append message to let user know what's going on
@@ -181,32 +149,32 @@ class MyClient(discord.Client):
             await self.send_message(message.channel, msg)
 
         if message.content.startswith('!event'):
-            args = message.content.split()[1:]
-            if not args:
-                if not eventlist:
-                    eventlist.append(apps.Event())
-                    await self.send_message(message.channel, 'Name of this event?')
-                    titlemsg = await self.wait_for_message(author=message.author)
-                    eventlist[0].set_title(titlemsg.content)
-                    msg = "Event created"
-                else:
-                    msg = eventlist
-            elif args[0] == 'list':
-                msg = eventlist[0].get_details()
-            elif args[0] == 'loc':
-                location = ' '.join(args[1:])
-                eventlist[0].set_loc(location)
-                msg = "Event location set to {}".format(location)
-            elif args[0] == 'time':
-                time = ' '.join(args[1:])
-                eventlist[0].set_time(time)
-                msg = "Event time set to {}".format(time)
-            elif args[0] == 'rsvp':
-                # consider : message.author.nick
-                eventlist[0].add_attendee(message.author.nick)
-                msg = "Thank you for RSVPing, {0.author.mention}".format(
-                    message)
-            await self.send_message(message.channel, msg)
+            # args = message.content.split()[1:]
+            # if not args:
+            #     if not eventlist:
+            #         eventlist.append(apps.Event())
+            #         await self.send_message(message.channel, 'Name of this event?')
+            #         titlemsg = await self.wait_for_message(author=message.author)
+            #         eventlist[0].set_title(titlemsg.content)
+            #         msg = "Event created"
+            #     else:
+            #         msg = eventlist
+            # elif args[0] == 'list':
+            #     msg = eventlist[0].get_details()
+            # elif args[0] == 'loc':
+            #     location = ' '.join(args[1:])
+            #     eventlist[0].set_loc(location)
+            #     msg = "Event location set to {}".format(location)
+            # elif args[0] == 'time':
+            #     time = ' '.join(args[1:])
+            #     eventlist[0].set_time(time)
+            #     msg = "Event time set to {}".format(time)
+            # elif args[0] == 'rsvp':
+            #     # consider : message.author.nick
+            #     eventlist[0].add_attendee(message.author.nick)
+            #     msg = "Thank you for RSVPing, {0.author.mention}".format(
+            #         message)
+            await self.send_message(message.channel, "This feature is under renovation")
 
         if message.content.startswith('!trivia'):
             if len(message.content.split()) > 1:
@@ -229,14 +197,20 @@ class MyClient(discord.Client):
             await self.add_reaction(message, "\U0001F4A9")
 
         if message.content.startswith('!try'):
-            # from client.getall to bot.getall
-            monkaS = [emji for emji in bot.get_all_emojis() if emji.id ==
-                      '438385897965223937'][0]
-            await self.add_reaction(message, monkaS)
+            await self.add_reaction(message, self.illuminati)
+
+        if message.content.startswith('!mtg'):
+            # get all text after !mtg
+            try:
+                query = message.content.split(' ', 1)[1]
+            except IndexError:
+                await self.send_message(message.channel, "Enter a search query after the '!mtg' command.")
+                raise
+            await self.send_message(message.channel, apps.fuzzy_search_card_name(query))
 
         # for every sent message roll for 1 in 1000 chance
         if randint(0, 999) == 999:
-            await self.add_reaction(message, "\U0001F4A9")
+            await self.add_reaction(message, self.illuminati)
 
     @bot.event
     async def on_ready(self):
@@ -245,6 +219,10 @@ class MyClient(discord.Client):
         print(self.user.name)
         print(self.user.id)
         print('------------')
+
+        # load illuminati emoji
+        self.illuminati = [
+            emji for emji in bot.get_all_emojis() if emji.name == 'illuminati'][0]
 
         # announce when bot is online
         for server in self.servers:
@@ -261,9 +239,5 @@ class MyClient(discord.Client):
                         break
 
 
-# client = MyClient()
-# client.run(TOKEN)
-
-# # bot = commands.Bot(command_prefix=BOT_PREFIX)
 bot = MyClient(command_prefix=BOT_PREFIX)
 bot.run(TOKEN)

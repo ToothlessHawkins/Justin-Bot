@@ -1,3 +1,5 @@
+__pycache__/
+
 # ignore local back ups
 back_ups/
 # ignore local bug reports

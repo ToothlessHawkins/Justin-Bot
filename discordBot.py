@@ -14,8 +14,10 @@ from random import randint
 DIRNAME = os.path.dirname(__file__)
 
 BOT_PREFIX = ("!")
-TOKEN = 'NDMyOTkwMjM1ODE5OTAwOTM4.Da1ZVQ.zwySRKq-wHwFVnsi41Ob3GXpq1E'
-JUSTIN_ID = '133426798221328384'
+
+from config.constants import Tokens
+TOKEN = Tokens.TOKEN
+JUSTIN_ID = Tokens.JUSTIN_ID
 
 
 bot = commands.Bot(command_prefix=BOT_PREFIX)

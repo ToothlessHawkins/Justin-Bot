@@ -6,3 +6,4 @@ back_ups/
 reports/
 
 _discordBot.py
+config/constants.py

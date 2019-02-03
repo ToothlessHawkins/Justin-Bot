@@ -3,6 +3,7 @@ from discord.ext import commands
 import apps
 import os
 import os.path
+from re import findall
 
 from testRunner import run_tests, silent_tests
 
@@ -199,18 +200,27 @@ class MyClient(discord.Client):
         if message.content.startswith('!try'):
             await self.add_reaction(message, self.illuminati)
 
-        if message.content.startswith('!mtg'):
-            # get all text after !mtg
-            try:
-                query = message.content.split(' ', 1)[1]
-            except IndexError:
-                await self.send_message(message.channel, "Enter a search query after the '!mtg' command.")
-                raise
-            await self.send_message(message.channel, apps.fuzzy_search_card_name(query))
+        # if message.content.startswith('!mtg'):
+        #     # get all text after !mtg
+        #     try:
+        #         query = message.content.split(' ', 1)[1]
+        #     except IndexError:
+        #         await self.send_message(message.channel, "Enter a search query after the '!mtg' command.")
+        #         raise
+        #     await self.send_message(message.channel, apps.fuzzy_search_card_name(query))
+
+        """
+        Passive stuff
+        """
 
         # for every sent message roll for 1 in 1000 chance
         if randint(0, 999) == 999:
             await self.add_reaction(message, self.illuminati)
+
+        cards = findall(r'(?<=\[\[)(.*?)(?=\]\])', message.content)
+        if cards:
+            for card in cards:
+                await self.send_message(message.channel, apps.fuzzy_search_card_name(card))
 
     @bot.event
     async def on_ready(self):

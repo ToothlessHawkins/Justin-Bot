@@ -2,6 +2,7 @@ from urllib.request import urlopen
 from urllib.parse import urlencode
 from urllib.error import HTTPError
 from json import load
+from html import unescape
 
 
 def get_trivia_question(res):
@@ -27,6 +28,6 @@ def get_trivia_question(res):
 def trivia_question(difficulty):
     try:
         with urlopen("https://opentdb.com/api.php?amount=1&{}".format(urlencode({'difficulty': difficulty}))) as f:
-            return get_trivia_question(load(f))
+            return unescape(get_trivia_question(load(f)))
     except HTTPError:
         return "Server Error."

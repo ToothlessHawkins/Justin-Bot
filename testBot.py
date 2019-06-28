@@ -164,7 +164,11 @@ class TestTrivia(unittest.TestCase):
                                                                 "question": "TEST_QUESTION", "correct_answer": "TEST_CORRECT", "incorrect_answers": ["TEST_INCORRECT"]}]}
 
     def test_get_trivia_question(self):
-        expected = {'question': "Category: TEST_CATEGORY\nQuestion: TEST_QUESTION\nOptions: TEST_CORRECT; TEST_INCORRECT",
+        expected = {'question': "Category: TEST_CATEGORY\nQuestion: TEST_QUESTION\n",
+                    'options': {
+                        '1': 'TEST_CORRECT',
+                        '2': 'TEST_INCORRECT'
+                    },
                     'answer': "TEST_CORRECT"}
         self.assertEqual(
             apps.trivia.get_trivia_question(self.sim_trivia_res), expected)

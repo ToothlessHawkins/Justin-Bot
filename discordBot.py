@@ -190,12 +190,11 @@ class MyClient(discord.Client):
                 diff = message.content.split()[1]
             else:
                 diff = 'easy'
-            # trivia is dict containing question and answer
+            # trivia is dict containing question, option(dict), and answer
             trivia = apps.trivia_question(diff)
-            await self.send_message(message.channel, trivia['question'])
+            await self.send_message(message.channel, trivia['question'] + 'Options: ' + '; '.join(['{}. {}'.format(k, v) for k, v in trivia['options'].items()]))
             guess = await self.wait_for_message(author=message.author)
-            msg = "Correct!" if guess.content.lower(
-            ) == trivia['answer'].lower() else "Incorrect!"
+            msg = "Correct!" if guess.content in trivia['options'].keys() and trivia['answer'] == trivia['options'][guess.content] else "Incorrect!"
             await self.send_message(message.channel, msg)
 
         if message.content.startswith('!spell'):

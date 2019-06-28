@@ -17,7 +17,8 @@ def get_trivia_question(res):
             wrong.append(answer)
             options = sorted(wrong)
 
-            return {'question': "Category: {}\nQuestion: {}\nOptions: {}".format(category, question, '; '.join(options)),
+            return {'question': "Category: {}\nQuestion: {}\n".format(unescape(category), unescape(question)),
+                    'options': {str(k): v for k, v in enumerate(list(map(unescape, options)), 1)},
                     'answer': answer}
         else:
             return "Server Error, probably."
@@ -28,6 +29,6 @@ def get_trivia_question(res):
 def trivia_question(difficulty):
     try:
         with urlopen("https://opentdb.com/api.php?amount=1&{}".format(urlencode({'difficulty': difficulty}))) as f:
-            return unescape(get_trivia_question(load(f)))
+            return get_trivia_question(load(f))
     except HTTPError:
         return "Server Error."

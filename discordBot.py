@@ -54,13 +54,13 @@ class MyClient(discord.Client):
 
         if message.content.startswith('!restart') and message.author.id == JUSTIN_ID:
             await self.send_message(message.channel, "User verified. Restarting...")
-            os.system(os.path.join(DIRNAME, "batcave\\restart.bat"))
+            os.system(os.path.join(DIRNAME, "batcave\\restart.bat").replace('/', '\\'))
 
         if message.content.startswith('!update') and message.author.id == JUSTIN_ID:
             await self.send_message(message.channel, "User verified. Updating...")
-            if os.system(os.path.join(DIRNAME, "batcave\\update.bat")) == 0:
+            if os.system(os.path.join(DIRNAME, "batcave\\update.bat").replace('/', '\\')) == 0:
                 await self.send_message(message.channel, "Restarting...")
-                os.system(os.path.join(DIRNAME, "batcave\\restart.bat"))
+                os.system(os.path.join(DIRNAME, "batcave\\restart.bat").replace('/', '\\'))
             else:
                 await self.send_message(message.channel, "Error accessing Git. Help me.")
 

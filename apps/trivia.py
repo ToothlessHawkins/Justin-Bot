@@ -19,7 +19,7 @@ def get_trivia_question(res):
 
             return {'question': "Category: {}\nQuestion: {}\n".format(unescape(category), unescape(question)),
                     'options': {str(k): v for k, v in enumerate(list(map(unescape, options)), 1)},
-                    'answer': answer}
+                    'answer': unscape(answer)}
         else:
             return "Server Error, probably."
     except KeyError:

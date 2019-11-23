@@ -214,10 +214,11 @@ class MyClient(discord.Client):
         if randint(0, 9999) == 9999:
             await self.add_reaction(message, self.illuminati)
 
+        # MTG card search
         cards = findall(r'(?<=\[\[)(.*?)(?=\]\])', message.content)
         if cards:
             for card in cards:
-                await self.send_message(message.channel, apps.fuzzy_search_card_name(card))
+                await self.send_message(message.channel, apps.mtg_search(card))
 
     @bot.event
     async def on_ready(self):

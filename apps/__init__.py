@@ -8,4 +8,4 @@ from apps.weather import get_weather
 from apps.event import Event
 from apps.trivia import trivia_question
 from apps.pfspells import embed_spell
-from apps.mtgsearch import fuzzy_search_card_name
+from apps.mtgsearch import mtg_search

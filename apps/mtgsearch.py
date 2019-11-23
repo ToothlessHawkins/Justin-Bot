@@ -6,7 +6,8 @@ from json import load
 
 def mtg_search(query):
     if query.startswith('$'):
-        return fuzzy_search_price(query[1:])
+        price_dict = fuzzy_search_price(query[1:])
+        return f"{price_dict['name']}\n{price_dict['set']}\n{price_dict['price']}"
     else:
         return fuzzy_search_card_name(query)
 

@@ -120,11 +120,11 @@ class MyClient(discord.Client):
             city = message.content.split(' ', 1)[1]
             await self.send_message(message.channel, apps.get_weather(city))
 
-        if message.content.startswith('!magic8ball'):
+        if message.content.startswith('!magic8ball '):
             msg = "{0.author.mention} ".format(message) + apps.magic_8_ball()
             await self.send_message(message.channel, msg)
 
-        if message.content.startswith('!wiki'):
+        if message.content.startswith('!wiki '):
             # get all text after !wiki
             try:
                 query = message.content.split(' ', 1)[1]
@@ -138,15 +138,16 @@ class MyClient(discord.Client):
                 "\n`CHAR LIMIT REACHED`" if len(res) > 2000 else res
             await self.send_message(message.channel, msg)
 
-        if message.content.startswith('!roll'):
+        if message.content.startswith('!roll '):
             # get text after !roll
             rollval = message.content.split(' ', 1)[1]
+            # since we're checking for the space in the startswith, we know at least 1 will be present
             await self.send_message(message.channel, apps.dice_roller(rollval))
 
         if message.content.startswith('!btc'):
             await self.send_message(message.channel, apps.btc_value())
 
-        if message.content.startswith('!rps'):
+        if message.content.startswith('!rps '):
             throw = message.content.split()[1]
             msg = "{0.author.mention} threw {1}, I threw {2}".format(
                 message, throw, apps.rock_paper_scissors(throw))
@@ -157,7 +158,7 @@ class MyClient(discord.Client):
                 ' '.join(message.content.lower().split()[:-1])
             await self.send_message(message.channel, msg)
 
-        if message.content.startswith('!event'):
+        if message.content.startswith('!event '):
             # args = message.content.split()[1:]
             # if not args:
             #     if not eventlist:

@@ -73,7 +73,7 @@ def dice_roller(raw_query):
     if op:
         res = normalize_operator(op)(res, mod)
 
-    return "{}d{}{}{}: {}".format(num, face, op, mod, res)
+    return "`{}d{}{}{}:` \n{}".format(num, face, op, mod, res)
 
 
 if __name__ == '__main__':
